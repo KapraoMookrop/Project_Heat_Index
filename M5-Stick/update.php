@@ -60,7 +60,7 @@ if (!empty($_POST)) {
         $result = $conn->query($update_sql);
 
         if ($result === TRUE) {
-            $logData .= "อัปเดตข้อมูลเรียบร้อยแล้ว\n";
+            //$logData .= "อัปเดตข้อมูลเรียบร้อยแล้ว\n";
         } else {
             $logData .= "เกิดข้อผิดพลาดในการอัปเดตข้อมูล: " . $conn->error . "\n";
         }
@@ -107,7 +107,12 @@ if (!empty($_POST)) {
         }
 
     } else {
-        $logData .= "ไม่พบข้อมูลของ ESPID ที่ลงทะเบียนไว้: $espId\n";
+        $insertESP_sql = "INSERT INTO tbl_esp32_status (esp_id, temp, humidity, last_updated) VALUES (
+                          '$espId',
+                          '$temp',
+                          '$hum'  
+        )";
+        $logData .= "เพิ่มข้อมูล ESPID ในฐานข้อมูล ID : $espId\n";
     }
 
     // บันทึกข้อมูลลงในไฟล์ log.txt

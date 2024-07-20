@@ -3,24 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warning Heat Index</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/d05e3fe0a9.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/Project_Heat_Index/css/style.css">
+    <link rel="icon" type="png" href="img/logo.png">
 </head>
 <body>
-    <?php
-        $current_page = 'index';
-        include 'server.php';
-        include 'nav.php'; 
-        $sql = "SELECT * FROM tbl_user";
-        $result = $conn->query($sql);
-    ?>
-    <div class="content mt-5">
-        Home
+    <div class="container">
+        <?php include "page_master/nav.php"; ?>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-QLWkTrtA9OMhvzhqMW82j6e0+/Q5LWGtx5RHTIsNSeKFsYXhT8HtXylHQzGySFM4" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -13,7 +13,6 @@
     <?php 
         $current_page = 'status';
         include 'server.php';
-        include 'nav.php';
 
         // SQL query to join tbl_user and tbl_esp32_status
         $sql = "
@@ -34,28 +33,35 @@
         $result = $conn->query($sql);
     ?>
 
-    <div class="content mt-5">
-        <div class="table">
-            <table class="menu-table">
-                <thead>
-                    <th>ชื่อผู้ใช้</th>
-                    <th>อุณหภูมิ</th>
-                    <th>ความชื้นสัมพัทธ์</th>
-                    <th>ค่าดัชนิความร้อนในตัว</th>
-                    <th>สถานะ</th>
-                </thead>
-                <tbody>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['temp']); ?></td>
-                            <td><?php echo htmlspecialchars($row['humidity']); ?></td>
-                            <td><?php echo htmlspecialchars($row['heat_index']); ?></td>
-                            <td><?php echo htmlspecialchars($row['status_name']); ?></td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <?php include 'nav.php'; ?>
+            </div>
+            <div class="col-md-9">
+                <div class="table">
+                    <table class="menu-table">
+                        <thead>
+                            <th>ชื่อผู้ใช้</th>
+                            <th>อุณหภูมิ</th>
+                            <th>ความชื้นสัมพัทธ์</th>
+                            <th>ค่าดัชนิความร้อนในตัว</th>
+                            <th>สถานะ</th>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['temp']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['humidity']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['heat_index']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['status_name']); ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

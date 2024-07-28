@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="/Project_Heat_Index/css/style.css?v555">
+    <link rel="stylesheet" href="/Project_Heat_Index/css/style.css?v134">
     <link rel="icon" type="png" href="img/logo.png">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,29 +39,29 @@
         ?>
         <h2 class="text-center mt-3 fs-1">ค่าเฉลี่ยรายวัน</h2>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-12">
                 <canvas id="myChart"></canvas>
             </div>
         </div>
-        <div class="row mt-5">
-            <div class="value col-md-4">
-                <h4>ค่าอุณหภูมิปัจจุบัน</h4>
+        <div class="row mt-5 justify-content-center">
+            <div class="value col-6 col-lg-4">
+                <h4 class="text-center">ค่าอุณหภูมิปัจจุบัน</h4>
                 <p>
                     <span id="showtemp"></span>
                     <small id="valuetemp" class="fs-3">0%</small>
                 </p>
                 <input class="value-input" type="hidden" value="0" id="max" min="135" max="315">
             </div>
-            <div class="value col-md-4">
-                <h4>ค่าความชื้นปัจจุบัน</h4>
+            <div class="value col-6 col-lg-4">
+                <h4 class="text-center">ค่าความชื้นปัจจุบัน</h4>
                 <p>
                     <span id="showhum"></span>
                     <small id="valuehum" class="fs-3">0%</small>
                 </p>
                 <input class="value-input" type="hidden" value="0" id="max" min="135" max="315">
             </div>
-            <div class="value col-md-4">
-                <h4>ค่าดัชนีความร้อนปัจจุบัน</h4>
+            <div class="value col-6 col-lg-4">
+                <h4 class="text-center">ค่าดัชนีความร้อนปัจจุบัน</h4>
                 <p>
                     <span id="showheat"></span>
                     <small id="valueheat" class="fs-3">0%</small>

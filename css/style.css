@@ -23,3 +23,31 @@ nav .nav-btn p{
     padding: 0;
     text-align: left;
 }
+.value p, svg{
+    width: 300px;
+    height: 150px;
+    margin: 20px auto;
+    display:  flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+    overflow: hidden;
+}
+.value p span{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 300px;
+    height: 300px;
+    border: 50px solid;
+    box-sizing: border-box;
+    border-color: rgba(54, 162, 235, 1) rgba(54, 162, 235, 1) #ddd #ddd;
+    border-radius: 50%;
+    transform: rotate(135deg);
+    transition: 0.5s; 
+}
+.value svg circle:nth-child(2){
+    stroke: rgba(54, 162, 235, 1);
+    stroke-dasharray: 393;
+    transition: 0.5s;
+}

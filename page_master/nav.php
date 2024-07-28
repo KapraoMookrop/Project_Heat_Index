@@ -45,6 +45,7 @@
                                 <p>จัดการข้อมูล</p> 
                             </a>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Project_Heat_Index">หน้าหลัก</a></li>
                                 <li><a class="dropdown-item" href="/Project_Heat_Index/page-manage/system-user/dashboard.php">ข้อมูลผู้ดูแลระบบ</a></li>
                                 <li><a class="dropdown-item" href="/Project_Heat_Index/page-manage/user/dashboard.php">ข้อมูลผู้ลงทะเบียน</a></li>
                                 <li><a class="dropdown-item" href="/Project_Heat_Index/page-manage/esp/dashboard.php">ข้อมูลบอร์ด ESP</a></li>

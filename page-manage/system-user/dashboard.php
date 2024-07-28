@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/d05e3fe0a9.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/Project_Journal/css/style.css">
+  <link rel="icon" type="png" href="../../img/logo.png">
 </head>
 
 <body>

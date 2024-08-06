@@ -99,7 +99,7 @@
                         file_put_contents('log.txt', $logData, FILE_APPEND);
                         exit;
                     } else {
-                        $logData .= "อัปเดตข้อมูลรายวันเรียบร้อยแล้ว\n";
+                        //$logData .= "อัปเดตข้อมูลรายวันเรียบร้อยแล้ว\n";
                     }
                 } else {
                     // เพิ่มข้อมูลใหม่

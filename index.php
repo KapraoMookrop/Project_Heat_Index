@@ -13,18 +13,21 @@
     <div class="container">
         <?php 
             include "server.php";
-            $sql_daily = "SELECT temp, humidity, heat_index, date FROM tbl_daily_avg WHERE esp_id = '211264898497920'";
+
+            $search = isset($_GET['search']) ? $_GET['search'] : '211264898497920';
+
+            $sql_current = "SELECT temp, humidity, heat_index FROM tbl_esp32_status WHERE esp_id = '$search'";
+            $result_current = $conn->query($sql_current);
+
+            $sql_daily = "SELECT temp, humidity, heat_index, date FROM tbl_daily_avg WHERE esp_id = '$search' ORDER BY date DESC LIMIT 7";
             $result_daily = $conn->query($sql_daily);
 
-            $sql_current = "SELECT temp, humidity, heat_index FROM tbl_esp32_status WHERE esp_id = '211264898497920'";
-            $result_current = $conn->query($sql_current);
             $row_current = $result_current->fetch_assoc();
             $temp = $row_current['temp'];
             $hum = $row_current['humidity'];
             $heat = $row_current['heat_index'];
 
             $data_daily = array();
-
             if ($result_daily->num_rows > 0) {
                 while($row = $result_daily->fetch_assoc()) {
                     $data_daily[] = $row;
@@ -33,10 +36,43 @@
                 echo "0 results_daily";
             }
 
+            $sql_list_user = "SELECT 
+                                u.name,
+                                e.esp_id, 
+                                e.temp, 
+                                e.humidity, 
+                                e.heat_index, 
+                                e.status_name,
+                                e.last_updated
+                            FROM 
+                                tbl_esp32_status e
+                            LEFT JOIN 
+                                tbl_user u
+                            ON 
+                                u.id = e.user_id";
+            $list_user = $conn->query($sql_list_user);
+            
             $conn->close();
             
             include "page_master/nav.php"; 
         ?>
+        <form method="GET" action="index.php">
+            <div class="row align-items-center mt-3">
+                <div class="col-lg-1">
+                    <label class="form-label">เลือกผู้ใช้งาน</label>
+                </div>
+                <div class="col-lg-4">
+                    <select class="form-select w-100" name="search" required onchange="this.form.submit()">
+                        <option selected disabled value="">Choose...</option>
+                        <?php while ($user = $list_user->fetch_assoc()): ?>
+                        <option value="<?php echo $user['esp_id'] ?>" <?php if($user['esp_id'] == $search) echo 'selected'; ?>>
+                            <?php echo $user['name'] ?>
+                        </option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+            </div>
+        </form>
         <h2 class="text-center mt-3 fs-1">ค่าเฉลี่ยรายวัน</h2>
         <div class="row">
             <div class="col-12">
@@ -44,7 +80,7 @@
             </div>
         </div>
         <div class="row mt-5 justify-content-center">
-            <div class="value col-6 col-lg-4">
+            <div class="value col-12 col-lg-4">
                 <h4 class="text-center">ค่าอุณหภูมิปัจจุบัน</h4>
                 <p>
                     <span id="showtemp"></span>
@@ -52,7 +88,7 @@
                 </p>
                 <input class="value-input" type="hidden" value="0" id="max" min="135" max="315">
             </div>
-            <div class="value col-6 col-lg-4">
+            <div class="value col-12 col-lg-4 col-md-12">
                 <h4 class="text-center">ค่าความชื้นปัจจุบัน</h4>
                 <p>
                     <span id="showhum"></span>
@@ -60,7 +96,7 @@
                 </p>
                 <input class="value-input" type="hidden" value="0" id="max" min="135" max="315">
             </div>
-            <div class="value col-6 col-lg-4">
+            <div class="value col-12 col-lg-4">
                 <h4 class="text-center">ค่าดัชนีความร้อนปัจจุบัน</h4>
                 <p>
                     <span id="showheat"></span>
@@ -73,19 +109,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-QLWkTrtA9OMhvzhqMW82j6e0+/Q5LWGtx5RHTIsNSeKFsYXhT8HtXylHQzGySFM4" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script>
-        // รับข้อมูลจาก PHP กราฟรายวันนน
         const data = <?php echo json_encode($data_daily); ?>;
         const labels = data.map(row => row.date);
         const tempData = data.map(row => row.temp);
         const humidityData = data.map(row => row.humidity);
         const heatIndexData = data.map(row => row.heat_index);
         
-        console.log(data);
-        console.log(labels);
-        console.log(tempData);
-        console.log(humidityData);
-        console.log(heatIndexData);
-
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
             type: 'line',
@@ -127,7 +156,7 @@
                     y: {
                         beginAtZero: false,
                         ticks: {
-                            stepSize: 5 // ตั้งค่าความห่างของแกน y เป็น 5 หน่วย
+                            stepSize: 5
                         }
                     }
                 },
@@ -136,15 +165,14 @@
                         labels: {
                             font: {
                                 size: 14,
-                                family: 'Kanit' // เปลี่ยนเป็นฟอนต์ที่คุณต้องการ
+                                family: 'Kanit'
                             }
                         }
                     }
                 }
             }
         });
-        //////////////////////////////////////////////////////////
-        //ค่าปัจจุุบัน
+
         function toRangeValue(value) {
             return value * 1.8 + 135;
         }
@@ -155,7 +183,6 @@
         let tempRangeValue = toRangeValue(temp);
         let humRangeValue = toRangeValue(hum);
         let heatRangeValue = toRangeValue(heat);
-
 
         document.getElementById('showtemp').style.transform = `rotate(${tempRangeValue}deg)`;
         document.getElementById('showhum').style.transform = `rotate(${humRangeValue}deg)`;

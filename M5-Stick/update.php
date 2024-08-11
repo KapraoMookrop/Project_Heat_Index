@@ -10,12 +10,23 @@
     </style>
 </head>
 <?php
-    session_start();
     include '../server.php';
-    if (!empty($_POST)) {
-        $espId = $_POST['espId'];
-        $temp = $_POST['temperature'];
-        $hum = $_POST['humidity'];
+    if (!empty($_POST) || !empty($_GET)) {
+
+        if(!empty($_POST)){
+            echo "รับแบบ POST";
+            $espId = $_POST['espId'];
+            $temp = round($_POST['temperature'], 2);
+            $hum = round($_POST['humidity'], 2);
+        }
+
+        if(!empty($_GET)){
+            echo "รับแบบ GET";
+            $espId = $_GET['espId'];
+            $temp = round($_GET['temperature'], 2);
+            $hum = round($_GET['humidity'], 2);
+        }
+
         $line_token = "sTHVpTL5dxB6yuJbYVDqmzqVBKrW3e9tLFQnnBPmd0Q";
         date_default_timezone_set("Asia/Bangkok");
         $logData = date('Y-m-d H:i:s') . " - ";
@@ -63,7 +74,7 @@
             $result = $conn->query($update_sql);
 
             if ($result === TRUE) {
-                //$logData .= "อัปเดตข้อมูลเรียบร้อยแล้ว\n";
+                $logData .= "อัปเดตข้อมูลเรียบร้อยแล้ว\n";
             } else {
                 $logData .= "เกิดข้อผิดพลาดในการอัปเดตข้อมูล: " . $conn->error . "\n";
                 $conn->rollback();
@@ -84,14 +95,27 @@
                 if ($avgResult->num_rows > 0) {
                     // อัปเดตค่าเฉลี่ย
                     $avgData = $avgResult->fetch_assoc();
-                    $newAvgTemp = ($avgData['temp'] + $temp) / 2;
-                    $newAvgHumidity = ($avgData['humidity'] + $hum) / 2;
-                    $newAvgHeatIndex = round(($avgData['heat_index'] + $heat_index) / 2, 2);
+                    $count_rq = $avgData['count_rq'];
+                    $temp_temp = $avgData['temp_temp'];
+                    $temp_hum = $avgData['temp_humidity'];
+                    $temp_heat = $avgData['temp_heat_index'];
+
+                    $newCount_rq = $count_rq + 1;
+                    $newTemp_temp = $temp + $temp_temp;
+                    $newTemp_hum = $hum + $temp_hum;
+                    $newTemp_heat = $heat_index + $temp_heat;
+                    $newAvgTemp = round(($temp_temp + $temp) / $newCount_rq, 2);
+                    $newAvgHumidity = round(($temp_hum + $hum) / $newCount_rq, 2);
+                    $newAvgHeatIndex = round(($temp_heat + $heat_index) / $newCount_rq, 2);
 
                     $update_avg_sql = "UPDATE tbl_daily_avg SET 
                         temp = '$newAvgTemp',
                         humidity = '$newAvgHumidity',
-                        heat_index = '$newAvgHeatIndex'
+                        heat_index = '$newAvgHeatIndex',
+                        temp_temp = '$newTemp_temp',
+                        temp_humidity = '$newTemp_hum',
+                        temp_heat_index = '$newTemp_heat',
+                        count_rq = '$newCount_rq'
                         WHERE esp_id = $espId AND date = '$currentDate'";
                     if ($conn->query($update_avg_sql) === false) {
                         $logData .= "Error updating data: " . $conn->error . "\n";
@@ -99,16 +123,19 @@
                         file_put_contents('log.txt', $logData, FILE_APPEND);
                         exit;
                     } else {
-                        //$logData .= "อัปเดตข้อมูลรายวันเรียบร้อยแล้ว\n";
+                        $logData .= "อัปเดตข้อมูลรายวันเรียบร้อยแล้ว\n";
                     }
                 } else {
                     // เพิ่มข้อมูลใหม่
-                    $insert_avg_sql = "INSERT INTO tbl_daily_avg (esp_id, temp, humidity, heat_index, date) VALUES (
+                    $insert_avg_sql = "INSERT INTO tbl_daily_avg (esp_id, temp, humidity, heat_index, date, temp_temp, temp_humidity, temp_heat_index) VALUES (
                         '$espId',
                         '$temp',
                         '$hum',
                         '$heat_index',
-                        '$currentDate'
+                        '$currentDate',
+                        '$temp',
+                        '$hum',
+                        '$heat_index'
                     )";
                     if ($conn->query($insert_avg_sql) === false) {
                         $logData .= "Error inserting data: " . $conn->error . "\n";
@@ -141,6 +168,7 @@
         }
     }else{
         file_put_contents('log.txt', date('Y-m-d H:i:s') . " - " . "ไม่พบการส่งข้อมูลมา\n", FILE_APPEND);
+        echo "ไม่พบการส่งข้อมูลมา";
     }
 
     function calculateHeatIndex($temperature, $humidity) {

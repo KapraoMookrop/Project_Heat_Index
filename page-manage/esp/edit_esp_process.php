@@ -10,7 +10,6 @@
 </head>
 <body>
     <?php
-        session_start();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             include '../../server.php'; // เชื่อมต่อฐานข้อมูล
             $esp_id = $_POST['editEsp32ID'];

@@ -49,7 +49,8 @@
                             LEFT JOIN 
                                 tbl_user u
                             ON 
-                                u.id = e.user_id";
+                                u.id = e.user_id
+                            ORDER BY u.id ASC";
             $list_user = $conn->query($sql_list_user);
             
             $conn->close();
@@ -58,6 +59,7 @@
         ?>
         <form method="GET" action="index.php">
             <div class="row align-items-center mt-3">
+                <div class="col-7"></div>
                 <div class="col-lg-1">
                     <label class="form-label">เลือกผู้ใช้งาน</label>
                 </div>
